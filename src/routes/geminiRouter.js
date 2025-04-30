@@ -1,6 +1,6 @@
 const express = require('express');
-const { promptText } = require('../controllers/geminiController');
-const router  = express.Router();
+const { promptText, promptAudio } = require('../controllers/geminiController');
+const router = express.Router();
 
 /**
  * @swagger
@@ -42,10 +42,47 @@ const router  = express.Router();
  */
 router.post('/prompt-text', promptText);
 
-// realtime-conversation
 
-// realtime-webcam
-
-// live-screen
+/**
+ * @swagger
+ * /gemini/prompt-audio:
+ *   post:
+ *     tags:
+ *       - Gemini
+ *     summary: Procesa un audio y devuelve texto + audio
+ *     description: |
+ *       Recibe un MP3, lo convierte a texto, genera la respuesta con Gemini
+ *       y sintetiza la respuesta a MP3 en Base64.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               audioFile:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo MP3 con la pregunta hablada.
+ *     responses:
+ *       200:
+ *         description: JSON con la respuesta en texto y el audio en Base64.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 text:
+ *                   type: string
+ *                   description: Respuesta generada por Gemini.
+ *                 audio:
+ *                   type: string
+ *                   description: Audio MP3 codificado en Base64 con la respuesta hablada.
+ *       400:
+ *         description: Error en transcripción o falta de archivo.
+ *       500:
+ *         description: Error interno al procesar el audio.
+ */
+router.post('/prompt-audio', promptAudio);
 
 module.exports = router;
